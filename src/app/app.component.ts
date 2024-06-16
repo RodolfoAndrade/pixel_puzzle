@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
   ngOnInit() { } 
 
   getImage() {
-    this.image = this.apiService.getImage().subscribe(data => {
+    this.apiService.getImage().subscribe(data => {
         this.image = data;
         this.colors = this.image.colors;
         this.puzzle = this.image.puzzle;
@@ -73,7 +73,24 @@ export class AppComponent implements OnInit {
     this.color = rgba;
   }
 
-  setColor(x: number, y: number) {
-    this.puzzle[x*16+y] = this.color;
+  compColors(color1: any, color2: any){
+    return color1.r === color2.r && color1.g === color2.g && color1.b === color2.b && color1.a === color2.a;
+  }
+
+  checkRow(row: number){
+    var count = 0;
+    for(let i = 0; i < 16; i++){
+      if(this.compColors(this.puzzle[row*16+i], this.image.image[row*16+i])){
+        count++;
+      }
+    }
+    return count == 16;
+  }
+
+  setColor(i: number, j: number) {
+    this.puzzle[i*16+j] = this.color;
+    console.log("checkRow", this.checkRow(i));
+    console.log(this.puzzle, this.color);
+    console.log(this.image.image);
   }
 }

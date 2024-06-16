@@ -26,7 +26,7 @@ app.get('/api/image', (req, res) => {
         var pixels = indexes.map(i => image.getPixelColor(i[1], i[0])); // list of pixels
         var rgbas = pixels.map(i => Jimp.intToRGBA(i)); // int to rgba
         var set = Array.from(new Set(pixels)).map(i => Jimp.intToRGBA(i)); // get unique colors
-        var puzzle = Array(16*16).fill(0); // get blank puzzle
+        var puzzle = Array(16*16).fill({ r:255, g:255, b:255, a:255 }); // get blank puzzle
 
         function get_tips(i = 0, rows = true){
             // get color tips for each row

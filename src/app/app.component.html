@@ -27,8 +27,8 @@
       </td>
       <td>
         <table class="table">
-          <tr *ngFor="let y of cols">
-            <td *ngFor="let x of rows" (click)="setColor(x, y)" [ngStyle]="{'background-color': 'rgba('+puzzle[x*16+y].r+', '+puzzle[x*16+y].g+', '+puzzle[x*16+y].b+', '+puzzle[x*16+y].a+')'}"></td>
+          <tr *ngFor="let i of rows">
+            <td *ngFor="let j of cols" (click)="setColor(i, j)" [ngStyle]="{'background-color': 'rgba('+puzzle[i*16+j].r+', '+puzzle[i*16+j].g+', '+puzzle[i*16+j].b+', '+puzzle[i*16+j].a+')'}"></td>
           </tr>
         </table>
       </td>
