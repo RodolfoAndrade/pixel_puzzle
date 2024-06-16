@@ -80,8 +80,10 @@ app.get('/api/image', (req, res) => {
             image: rgbas,
             colors: set,
             puzzle: puzzle,
-            rows: tips_row,
-            cols: tips_col
+            rows: tips_row.map((i) => {return i.filter((j) => {return j["qtd"]>0})}),
+            cols: tips_col.map((i) => {return i.filter((j) => {return j["qtd"]>0})}),
+            max_tips_row: Math.max(...tips_row.map((i) => {return i.length})),
+            max_tips_col: Math.max(...tips_col.map((i) => {return i.length}))
         });
     });
 }); 

@@ -37,18 +37,16 @@ export class AppComponent implements OnInit {
         this.colors = this.image.colors;
         this.puzzle = this.image.puzzle;
         this.tips_row = this.image.rows;
-        this.tips_row = this.tips_row.map((i:any) => {return i.filter((j:any) => {return j["qtd"]>0})});
         this.tips_col = this.image.cols;
-        this.tips_col = this.tips_col.map((i:any) => {return i.filter((j:any) => {return j["qtd"]>0})});
+        this.max_tips_row = this.image.max_tips_row;
+        this.max_tips_col = this.image.max_tips_col;
         console.log(this.image.image);
         console.log(this.image.colors);
         console.log(this.image.puzzle);
         console.log(this.tips_row);
         console.log(this.tips_col);
         console.log(this.tips_col.map((i:any) => {return i.length}));
-        this.max_tips_row = Math.max(...this.tips_row.map((i:any) => {return i.length}));
         console.log(this.max_tips_row);
-        this.max_tips_col = Math.max(...this.tips_col.map((i:any) => {return i.length}));
         console.log(this.max_tips_col);
         this.table_col = Array.from({length: this.max_tips_col}, (x, i) => {return [].constructor(16).fill(0)});
         for (let i = 0; i<this.max_tips_col;i++){
