@@ -76,12 +76,15 @@ app.get('/api/image', (req, res) => {
         tips_row = Array.from({length: 16}, (x, i) => i).map(i => get_tips(i, true));
         tips_col = Array.from({length: 16}, (x, i) => i).map(i => get_tips(i, false));
 
+        tips_row = tips_row.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
+        tips_col = tips_col.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
+
         res.json({ 
             image: rgbas,
             colors: set,
             puzzle: puzzle,
-            rows: tips_row.map((i) => {return i.filter((j) => {return j["qtd"]>0})}),
-            cols: tips_col.map((i) => {return i.filter((j) => {return j["qtd"]>0})}),
+            rows: tips_row,
+            cols: tips_col,
             max_tips_row: Math.max(...tips_row.map((i) => {return i.length})),
             max_tips_col: Math.max(...tips_col.map((i) => {return i.length}))
         });
