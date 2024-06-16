@@ -33,37 +33,38 @@ app.get('/api/image', (req, res) => {
             var tips = [];
             var j = 0;
             var order = 0;
-            // take first pixel color
             if(rows){
+                // take first pixel color
                 var color = pixels[i*16+j];
                 // save on tips dict
-                tips[order] = {"color": Jimp.intToRGBA(color), "qtd": 1};
+                tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                 for(j = 1; j < 16; j++){
                     // if next color is not the same, add new tip and change color
                     if(color != pixels[i*16+j]){
                         order++;
                         color = pixels[i*16+j];
-                        tips[order] = {color: Jimp.intToRGBA(color), "qtd": 1};
+                        tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                     }
                     // if next color is the same
-                    else {
+                    else if(color!=4294967295) {
                         tips[order]["qtd"]++;
                     }
                 }
             }
             else {
+                // take first pixel color
                 var color = pixels[j*16+i];
                 // save on tips dict
-                tips[order] = {"color": color, "qtd": 1};
+                tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                 for(j = 1; j < 16; j++){
                     // if next color is not the same, add new tip and change color
                     if(color != pixels[j*16+i]){
                         order++;
                         color = pixels[j*16+i];
-                        tips[order] = {color: color, "qtd": 1};
+                        tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                     }
                     // if next color is the same
-                    else {
+                    else if(color!=4294967295) {
                         tips[order]["qtd"]++;
                     }
                 }
