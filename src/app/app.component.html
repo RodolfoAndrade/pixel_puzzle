@@ -3,6 +3,7 @@
   <h2>by RodolfoAndrade</h2>
   <p>Get ready to flex your logic muscles and unleash your inner artist with Pixel Puzzle! This exciting game combines the satisfaction of solving puzzles with the joy of creating pixel art.</p>
   <button (click)="getImage()">New Game</button><br>
+  <p *ngIf="error != ''" class="error">{{error}}</p>
   <div *ngIf="data">
     <div class="wrapper flex-row">
       <h3>select color: </h3>

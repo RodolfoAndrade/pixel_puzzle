@@ -75,3 +75,7 @@ td.invalid {
 section {
     margin: 20px;
 }
+
+p.error {
+    color: red;
+}

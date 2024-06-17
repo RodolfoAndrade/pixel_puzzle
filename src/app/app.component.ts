@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   header_rows: any;
   valid_rows: any;
   valid_cols: any;
+  error = "";
 
   constructor(private apiService: ApiService) { }; 
 
@@ -87,6 +88,9 @@ export class AppComponent implements OnInit {
         // variable to manager valid rows and cols on html
         this.valid_rows = [].constructor(this.size).fill('valid');
         this.valid_cols = [].constructor(this.size).fill('valid');
+    }, error => {
+      console.log(error);
+      this.error = "There seems to be a problem with the server! Make sure it is listening on port 3000.";
     });
   } 
 
