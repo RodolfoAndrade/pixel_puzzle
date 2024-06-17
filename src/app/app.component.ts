@@ -45,8 +45,8 @@ export class AppComponent implements OnInit {
         console.log(this.image.image);
         console.log(this.image.colors);
         console.log(this.image.puzzle);
-        console.log(this.tips_row);
-        console.log(this.tips_col);
+        console.log("tips_row", this.tips_row);
+        console.log("tips_col", this.tips_col);
         console.log(this.tips_col.map((i:any) => {return i.length}));
         console.log(this.max_tips_row);
         console.log(this.max_tips_col);
@@ -54,16 +54,16 @@ export class AppComponent implements OnInit {
         for (let i = 0; i<this.max_tips_col;i++){
           for(let j = 0; j<16;j++){
             if(this.tips_col[j][i]!=undefined){
-              this.table_col[this.max_tips_col-1-i][j]=this.tips_col[j][this.tips_col[j].length-1-i]["qtd"];
+              this.table_col[this.max_tips_col-1-i][j]=this.tips_col[j][this.tips_col[j].length-1-i];
             }
           }
         }
-        console.log(this.table_col);
+        console.log("table_col", this.table_col);
         this.table_row = Array.from({length: 16}, (x, i) => {return [].constructor(this.max_tips_row).fill(0)});
         for (let i = 0; i<16;i++){
           for(let j = 0; j<this.max_tips_row;j++){
             if(this.tips_row[i][this.tips_row[i].length-1-j]!=undefined){
-              this.table_row[i][this.max_tips_row-1-j]=this.tips_row[i][this.tips_row[i].length-1-j]["qtd"];
+              this.table_row[i][this.max_tips_row-1-j]=this.tips_row[i][this.tips_row[i].length-1-j];
             }
           }
         }
@@ -110,5 +110,9 @@ export class AppComponent implements OnInit {
       if(this.checkRow(i)) this.validRows[i] = 'invalid';
       if(this.checkCol(j)) this.validCols[j] = 'invalid';
     }
+  }
+
+  getColor(color: any): string {
+    return 'rgba('+color.r+', '+color.g+', '+color.b+', '+color.a+')';
   }
 }

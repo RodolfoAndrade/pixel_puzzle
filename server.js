@@ -19,7 +19,7 @@ app.get('/api/image', (req, res) => {
     // get files list in images folder
     var list = fs.readdirSync("./src/assets/images");
     console.log(list);
-    Jimp.read("./src/assets/images/"+list[2], (err, image) => {
+    Jimp.read("./src/assets/images/"+list[Math.floor(Math.random() * list.length)], (err, image) => {
         if (err) throw err;
         var is = Array.from({length: 16*16}, (x, i) => i); // array of 16*16
         var indexes = is.map(i => [Math.floor(i/16), i%16]); // indexes [0,0], [0,1], ...

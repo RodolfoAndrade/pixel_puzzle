@@ -1,10 +1,12 @@
 /* Title style */
 .main {
-    background-color: lightcyan;
+    /* background-color: lightcyan; */
     border-radius: 8px;
     width: 500px;
     text-align: center;
     font-family: monospace;
+    border-style: solid;
+    border-color: darkslateblue;
 }
 .main h1,h2 {
     color: darkslateblue;
@@ -48,7 +50,7 @@ h3 {
 }
 
 .game td:hover {
-    border-color: aqua;
+    background-color: darkslateblue !important;
 }
 
 td.invisible {
@@ -59,4 +61,8 @@ td.invisible {
 td.invalid {
     color: lightgray;
     border-color: lightgray;
+}
+
+.header td {
+    border-radius: 8px;
 }
