@@ -19,7 +19,8 @@ app.get('/api/image', (req, res) => {
     // get files list in images folder
     var list = fs.readdirSync("./src/assets/images");
     console.log(list);
-    Jimp.read("./src/assets/images/"+list[Math.floor(Math.random() * list.length)], (err, image) => {
+    // Math.floor(Math.random() * list.length)
+    Jimp.read("./src/assets/images/"+list[0], (err, image) => {
         if (err) throw err;
         var size = 8;
         var is = Array.from({length: size*size}, (x, i) => i); // array of size*size
@@ -33,40 +34,29 @@ app.get('/api/image', (req, res) => {
             var hints = [];
             var order = 0; // index for hints list
             var j = 0; // begining of col or row
-            if(rows){
-                // take first pixel color
-                var color = pixels[i*size+j];
-                // save dict on hints list. If color is white, qtd is 0
-                hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
-                for(j = 1; j < size; j++){
-                    // if next color is not the same, add new hint and change color
-                    if(color != pixels[i*size+j]){
-                        order++;
-                        color = pixels[i*size+j];
-                        hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
-                    }
-                    // if next color is the same and not white
-                    else if(color!=4294967295) {
-                        hints[order]["qtd"]++;
-                    }
-                }
+            // if rows is false, switch i and j
+            if(rows===false){
+                console.log(i, j);
+                var tmp = i;
+                i = j;
+                j = tmp;
+                console.log(i, j);
             }
-            else {
-                // take first pixel color
-                var color = pixels[j*size+i];
-                // save dict on hints list. If color is white, qtd is 0
-                hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
-                for(j = 1; j < size; j++){
-                    // if next color is not the same, add new hint and change color
-                    if(color != pixels[j*size+i]){
-                        order++;
-                        color = pixels[j*size+i];
-                        hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
-                    }
-                    // if next color is the same and not white
-                    else if(color!=4294967295) {
-                        hints[order]["qtd"]++;
-                    }
+            // take first pixel color
+            var color = pixels[i*size+j];
+            // save dict on hints list. If color is white, qtd is 0
+            hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
+            // if going through cols the i changes while j if fixed
+            for(rows===false ? i = 1 : j = 1; rows===false ? i < size : j < size; rows===false ? i++ : j++){
+                // if next color is not the same, add new hint and change color
+                if(color != pixels[i*size+j]){
+                    order++;
+                    color = pixels[i*size+j];
+                    hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
+                }
+                // if next color is the same and not white
+                else if(color!=4294967295) {
+                    hints[order]["qtd"]++;
                 }
             }
             //console.log(hints);
