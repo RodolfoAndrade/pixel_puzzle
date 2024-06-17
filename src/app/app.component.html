@@ -10,25 +10,27 @@
     <tr>
       <td></td>
       <td>
-        <table class="table">
+        <table class="table header">
           <tr *ngFor="let i of table_col">
-            <td *ngFor="let j of i">{{j}}</td>
+            <td *ngFor="let j of i; let ind = index" [ngClass]="j==0 ? 'invisible' : validCols[ind]">{{j}}</td>
           </tr>
         </table>
       </td>
     </tr>
     <tr>
       <td>
-        <table class="table">
-          <tr *ngFor="let i of table_row">
-            <td *ngFor="let j of i">{{j}}</td>
+        <table class="table header">
+          <tr *ngFor="let i of table_row; let  ind = index">
+            <td *ngFor="let j of i" [ngClass]="j==0 ? 'invisible' : validRows[ind]">{{j}}</td>
           </tr>
         </table>
       </td>
       <td>
-        <table class="table">
+        <table class="table game">
           <tr *ngFor="let i of rows">
-            <td *ngFor="let j of cols" (click)="setColor(i, j)" [ngStyle]="{'background-color': 'rgba('+puzzle[i*16+j].r+', '+puzzle[i*16+j].g+', '+puzzle[i*16+j].b+', '+puzzle[i*16+j].a+')'}"></td>
+            <td *ngFor="let j of cols"
+            (click)="setColor(i, j)"
+            [ngStyle]="{'background-color': 'rgba('+puzzle[i*16+j].r+', '+puzzle[i*16+j].g+', '+puzzle[i*16+j].b+', '+puzzle[i*16+j].a+')'}"></td>
           </tr>
         </table>
       </td>

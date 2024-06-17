@@ -1,8 +1,22 @@
 .table td {
-    background-color: 3929643775;
+    background-color: white;
     width: 18px;
     height: 18px;
     border-style: solid;
     border-width: 1px;
-    border-color: black;
+    /* border-color: black; */
+}
+
+.game td:hover {
+    border-color: aqua;
+}
+
+td.invisible {
+    color: white;
+    border-color: white;
+}
+
+td.invalid {
+    color: lightgray;
+    border-color: lightgray;
 }

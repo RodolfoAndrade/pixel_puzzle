@@ -26,6 +26,8 @@ export class AppComponent implements OnInit {
   max_tips_col = 0;
   table_col: any;
   table_row: any;
+  validRows = [].constructor(16).fill('valid');
+  validCols = [].constructor(16).fill('valid');
 
   constructor(private apiService: ApiService) { }; 
 
@@ -87,10 +89,26 @@ export class AppComponent implements OnInit {
     return count == 16;
   }
 
+  checkCol(col: number){
+    var count = 0;
+    for(let i = 0; i < 16; i++){
+      if(this.compColors(this.puzzle[i*16+col], this.image.image[i*16+col])){
+        count++;
+      }
+    }
+    return count == 16;
+  }
+
   setColor(i: number, j: number) {
-    this.puzzle[i*16+j] = this.color;
     console.log("checkRow", this.checkRow(i));
-    console.log(this.puzzle, this.color);
-    console.log(this.image.image);
+    console.log("checkCol", this.checkCol(j));
+    console.log(this.validRows[i]);
+    if(!this.checkRow(i)&&!this.checkCol(j)){
+      this.puzzle[i*16+j] = this.color;
+      console.log(this.puzzle, this.color);
+      console.log(this.image.image);
+      if(this.checkRow(i)) this.validRows[i] = 'invalid';
+      if(this.checkCol(j)) this.validCols[j] = 'invalid';
+    }
   }
 }
