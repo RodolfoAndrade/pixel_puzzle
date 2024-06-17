@@ -1,5 +1,45 @@
+/* Title style */
+.main {
+    background-color: lightcyan;
+    border-radius: 8px;
+    width: 500px;
+    text-align: center;
+    font-family: monospace;
+}
+.main h1,h2 {
+    color: darkslateblue;
+}
+.main h1 {
+    margin-bottom: 0;
+}
+.main h2 {
+    margin-top: 0;
+}
+
+/* Start button style */
+
+button {
+    background-color: red;
+    color: white;
+    font-family: monospace;
+    font-size: large;
+    text-transform: uppercase;
+    font-weight: 900;
+    border-style: hidden;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+}
+
+/* Options style */
+h3 {
+    margin: 0;
+    text-align: start;
+    color: darkslateblue;
+}
+
 .table td {
-    background-color: white;
+    /* background-color: white; */
     width: 18px;
     height: 18px;
     border-style: solid;
