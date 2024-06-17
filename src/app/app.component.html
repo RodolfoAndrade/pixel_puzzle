@@ -15,10 +15,10 @@
         <td></td>
         <td>
           <table class="table header">
-            <tr *ngFor="let i of table_col; let indi = index">
+            <tr *ngFor="let i of header_cols; let indi = index">
               <td 
               *ngFor="let j of i; let indj = index" 
-              [ngClass]="j===0 ? 'invisible' : validCols[indj]"
+              [ngClass]="j===0 ? 'invisible' : valid_cols[indj]"
               [ngStyle]="j!==0 ? {'border-color': getColor(j['color'])} : {'border-color': 'white'}">{{j["qtd"]}}</td>
             </tr>
           </table>
@@ -27,9 +27,9 @@
       <tr>
         <td>
           <table class="table header">
-            <tr *ngFor="let i of table_row; let  ind = index">
+            <tr *ngFor="let i of header_rows; let  ind = index">
               <td *ngFor="let j of i" 
-              [ngClass]="j===0 ? 'invisible' : validRows[ind]"
+              [ngClass]="j===0 ? 'invisible' : valid_rows[ind]"
               [ngStyle]="j!==0 ? {'border-color': getColor(j['color'])} : {'border-color': 'white'}">{{j["qtd"]}}</td>
             </tr>
           </table>

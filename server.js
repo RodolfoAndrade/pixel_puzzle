@@ -2,7 +2,7 @@ const express = require('express');
 const Jimp = require("jimp");
 const fs = require('fs'); 
 const app = express(); 
-  
+
 // handling CORS 
 app.use((req, res, next) => { 
     res.header("Access-Control-Allow-Origin",  
@@ -12,15 +12,11 @@ app.use((req, res, next) => {
     next(); 
 }); 
 
-
-  
 // resize image
 app.get('/api/image', (req, res) => { 
     // get files list in images folder
     var list = fs.readdirSync("./src/assets/images");
-    console.log(list);
-    // Math.floor(Math.random() * list.length)
-    Jimp.read("./src/assets/images/"+list[0], (err, image) => {
+    Jimp.read("./src/assets/images/"+list[Math.floor(Math.random() * list.length)], (err, image) => {
         if (err) throw err;
         var size = 8;
         var is = Array.from({length: size*size}, (x, i) => i); // array of size*size
@@ -36,11 +32,9 @@ app.get('/api/image', (req, res) => {
             var j = 0; // begining of col or row
             // if rows is false, switch i and j
             if(rows===false){
-                console.log(i, j);
                 var tmp = i;
                 i = j;
                 j = tmp;
-                console.log(i, j);
             }
             // take first pixel color
             var color = pixels[i*size+j];
@@ -59,28 +53,28 @@ app.get('/api/image', (req, res) => {
                     hints[order]["qtd"]++;
                 }
             }
-            //console.log(hints);
             return hints;
         }
 
-        hints_row = Array.from({length: size}, (x, i) => i).map(i => get_hints(i, true));
-        hints_col = Array.from({length: size}, (x, i) => i).map(i => get_hints(i, false));
-
-        hints_row = hints_row.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
-        hints_col = hints_col.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
+        // store hints of rows and cols
+        hints_rows = Array.from({length: size}, (x, i) => i).map(i => get_hints(i, true));
+        hints_cols = Array.from({length: size}, (x, i) => i).map(i => get_hints(i, false));
+        // remove white pixels from hints
+        hints_rows = hints_rows.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
+        hints_cols = hints_cols.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
 
         res.json({ 
             size: size,
             image: rgbas,
             colors: colors,
-            rows: hints_row,
-            cols: hints_col,
-            max_hints_row: Math.max(...hints_row.map((i) => {return i.length})),
-            max_hints_col: Math.max(...hints_col.map((i) => {return i.length}))
+            hints_rows: hints_rows,
+            hints_cols: hints_cols,
+            max_hints_rows: Math.max(...hints_rows.map((i) => {return i.length})),
+            max_hints_cols: Math.max(...hints_cols.map((i) => {return i.length}))
         });
     });
 }); 
-  
+
 app.listen(3000, () => { 
     console.log('Server listening on port 3000'); 
 });

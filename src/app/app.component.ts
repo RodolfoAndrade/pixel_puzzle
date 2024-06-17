@@ -16,17 +16,18 @@ export class AppComponent implements OnInit {
   size: any;
   cols: any;
   rows: any;
-  color = { a:0, r:0, g:0, b:0 };
   colors: any;
+  color: any;
   puzzle: any;
-  tips_row: any;
-  tips_col: any;
-  max_tips_row = 0;
-  max_tips_col = 0;
-  table_col: any;
-  table_row: any;
-  validRows: any;
-  validCols: any;
+  image: any;
+  hints_rows: any;
+  hints_cols: any;
+  max_hints_rows = 0;
+  max_hints_cols = 0;
+  header_cols: any;
+  header_rows: any;
+  valid_rows: any;
+  valid_cols: any;
 
   constructor(private apiService: ApiService) { }; 
 
@@ -41,40 +42,51 @@ export class AppComponent implements OnInit {
         this.rows = Array.from({length: this.size}, (x, i) => i);
         // colors of the image
         this.colors = this.data.colors;
+        this.color = { a:0, r:0, g:0, b:0 };
+        // get puzzle answer
+        this.image = this.data.image;
         // create blank puzzle
         this.puzzle = Array(this.size*this.size).fill({ r:255, g:255, b:255, a:255 });
-        this.tips_row = this.data.rows;
-        this.tips_col = this.data.cols;
-        this.max_tips_row = this.data.max_hints_row;
-        this.max_tips_col = this.data.max_hints_col;
-        console.log("image", this.data.image);
-        console.log("colors", this.data.colors);
+        // hints of colors and its quantities
+        this.hints_rows = this.data.hints_rows;
+        this.hints_cols = this.data.hints_cols;
+        // max color hints for header table
+        this.max_hints_rows = this.data.max_hints_rows;
+        this.max_hints_cols = this.data.max_hints_cols;
+
+        console.log("image", this.image);
+        console.log("colors", this.colors);
         console.log("puzzle", this.puzzle);
-        console.log("tips_row", this.tips_row);
-        console.log("tips_col", this.tips_col);
-        console.log(this.tips_col.map((i:any) => {return i.length}));
-        console.log(this.max_tips_row);
-        console.log(this.max_tips_col);
-        this.table_col = Array.from({length: this.max_tips_col}, (x, i) => {return [].constructor(this.size).fill(0)});
-        for (let i = 0; i<this.max_tips_col;i++){
+        console.log("hints_rows", this.hints_rows);
+        console.log("hints_cols", this.hints_cols);
+        console.log("max_hints_rows", this.max_hints_rows);
+        console.log("max_hints_cols", this.max_hints_cols);
+
+        // header_cols display the hints_cols on html
+        this.header_cols = Array.from({length: this.max_hints_cols}, (x, i) => {return [].constructor(this.size).fill(0)});
+        for (let i = 0; i<this.max_hints_cols;i++){
           for(let j = 0; j<this.size;j++){
-            if(this.tips_col[j][i]!=undefined){
-              this.table_col[this.max_tips_col-1-i][j]=this.tips_col[j][this.tips_col[j].length-1-i];
+            if(this.hints_cols[j][i]!=undefined){
+              this.header_cols[this.max_hints_cols-1-i][j]=this.hints_cols[j][this.hints_cols[j].length-1-i];
             }
           }
         }
-        console.log("table_col", this.table_col);
-        this.table_row = Array.from({length: this.size}, (x, i) => {return [].constructor(this.max_tips_row).fill(0)});
+        console.log("header_cols", this.header_cols);
+
+        // header_cols display the hints_cols on html
+        this.header_rows = Array.from({length: this.size}, (x, i) => {return [].constructor(this.max_hints_rows).fill(0)});
         for (let i = 0; i<this.size;i++){
-          for(let j = 0; j<this.max_tips_row;j++){
-            if(this.tips_row[i][this.tips_row[i].length-1-j]!=undefined){
-              this.table_row[i][this.max_tips_row-1-j]=this.tips_row[i][this.tips_row[i].length-1-j];
+          for(let j = 0; j<this.max_hints_rows;j++){
+            if(this.hints_rows[i][this.hints_rows[i].length-1-j]!=undefined){
+              this.header_rows[i][this.max_hints_rows-1-j]=this.hints_rows[i][this.hints_rows[i].length-1-j];
             }
           }
         }
-        console.log("table_row", this.table_row);
-        this.validRows = [].constructor(this.size).fill('valid');
-        this.validCols = [].constructor(this.size).fill('valid');
+        console.log("header_rows", this.header_rows);
+
+        // variable to manager valid rows and cols on html
+        this.valid_rows = [].constructor(this.size).fill('valid');
+        this.valid_cols = [].constructor(this.size).fill('valid');
     });
   } 
 
@@ -87,9 +99,10 @@ export class AppComponent implements OnInit {
   }
 
   checkRow(row: number){
+    // check if puzzle and image has the same pixels color on row
     var count = 0;
     for(let i = 0; i < this.size; i++){
-      if(this.compColors(this.puzzle[row*this.size+i], this.data.image[row*this.size+i])){
+      if(this.compColors(this.puzzle[row*this.size+i], this.image[row*this.size+i])){
         count++;
       }
     }
@@ -97,9 +110,10 @@ export class AppComponent implements OnInit {
   }
 
   checkCol(col: number){
+    // check if puzzle and image has the same pixels color on col
     var count = 0;
     for(let i = 0; i < this.size; i++){
-      if(this.compColors(this.puzzle[i*this.size+col], this.data.image[i*this.size+col])){
+      if(this.compColors(this.puzzle[i*this.size+col], this.image[i*this.size+col])){
         count++;
       }
     }
@@ -107,15 +121,11 @@ export class AppComponent implements OnInit {
   }
 
   setColor(i: number, j: number) {
-    console.log("checkRow", this.checkRow(i));
-    console.log("checkCol", this.checkCol(j));
-    console.log(this.validRows[i]);
+    // if row and col are not filled correctly
     if(!this.checkRow(i)&&!this.checkCol(j)){
       this.puzzle[i*this.size+j] = this.color;
-      console.log(this.puzzle, this.color);
-      console.log(this.data.image);
-      if(this.checkRow(i)) this.validRows[i] = 'invalid';
-      if(this.checkCol(j)) this.validCols[j] = 'invalid';
+      if(this.checkRow(i)) this.valid_rows[i] = 'invalid';
+      if(this.checkCol(j)) this.valid_cols[j] = 'invalid';
     }
   }
 
