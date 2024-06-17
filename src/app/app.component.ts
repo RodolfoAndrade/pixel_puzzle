@@ -36,17 +36,20 @@ export class AppComponent implements OnInit {
     this.apiService.getImage().subscribe(data => {
         this.data = data;
         this.size = this.data.size;
+        // cols and rows for drawing the game table
         this.cols = Array.from({length: this.size}, (x, i) => i);
         this.rows = Array.from({length: this.size}, (x, i) => i);
+        // colors of the image
         this.colors = this.data.colors;
-        this.puzzle = this.data.puzzle;
+        // create blank puzzle
+        this.puzzle = Array(this.size*this.size).fill({ r:255, g:255, b:255, a:255 });
         this.tips_row = this.data.rows;
         this.tips_col = this.data.cols;
-        this.max_tips_row = this.data.max_tips_row;
-        this.max_tips_col = this.data.max_tips_col;
+        this.max_tips_row = this.data.max_hints_row;
+        this.max_tips_col = this.data.max_hints_col;
         console.log("image", this.data.image);
         console.log("colors", this.data.colors);
-        console.log("puzzle", this.data.puzzle);
+        console.log("puzzle", this.puzzle);
         console.log("tips_row", this.tips_row);
         console.log("tips_col", this.tips_col);
         console.log(this.tips_col.map((i:any) => {return i.length}));

@@ -26,69 +26,67 @@ app.get('/api/image', (req, res) => {
         var indexes = is.map(i => [Math.floor(i/size), i%size]); // indexes [0,0], [0,1], ...
         var pixels = indexes.map(i => image.getPixelColor(i[1], i[0])); // list of pixels
         var rgbas = pixels.map(i => Jimp.intToRGBA(i)); // int to rgba
-        var set = Array.from(new Set(pixels)).map(i => Jimp.intToRGBA(i)); // get unique colors
-        var puzzle = Array(size*size).fill({ r:255, g:255, b:255, a:255 }); // get blank puzzle
+        var colors = Array.from(new Set(pixels)).map(i => Jimp.intToRGBA(i)); // get unique colors
 
-        function get_tips(i = 0, rows = true){
-            // get color tips for each row
-            var tips = [];
-            var j = 0;
-            var order = 0;
+        function get_hints(i = 0, rows = true){
+            // get color hints for each row or col
+            var hints = [];
+            var order = 0; // index for hints list
+            var j = 0; // begining of col or row
             if(rows){
                 // take first pixel color
                 var color = pixels[i*size+j];
-                // save on tips dict
-                tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
+                // save dict on hints list. If color is white, qtd is 0
+                hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                 for(j = 1; j < size; j++){
-                    // if next color is not the same, add new tip and change color
+                    // if next color is not the same, add new hint and change color
                     if(color != pixels[i*size+j]){
                         order++;
                         color = pixels[i*size+j];
-                        tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
+                        hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                     }
-                    // if next color is the same
+                    // if next color is the same and not white
                     else if(color!=4294967295) {
-                        tips[order]["qtd"]++;
+                        hints[order]["qtd"]++;
                     }
                 }
             }
             else {
                 // take first pixel color
                 var color = pixels[j*size+i];
-                // save on tips dict
-                tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
+                // save dict on hints list. If color is white, qtd is 0
+                hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                 for(j = 1; j < size; j++){
-                    // if next color is not the same, add new tip and change color
+                    // if next color is not the same, add new hint and change color
                     if(color != pixels[j*size+i]){
                         order++;
                         color = pixels[j*size+i];
-                        tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
+                        hints[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                     }
-                    // if next color is the same
+                    // if next color is the same and not white
                     else if(color!=4294967295) {
-                        tips[order]["qtd"]++;
+                        hints[order]["qtd"]++;
                     }
                 }
             }
-            //console.log(tips);
-            return tips;
+            //console.log(hints);
+            return hints;
         }
 
-        tips_row = Array.from({length: size}, (x, i) => i).map(i => get_tips(i, true));
-        tips_col = Array.from({length: size}, (x, i) => i).map(i => get_tips(i, false));
+        hints_row = Array.from({length: size}, (x, i) => i).map(i => get_hints(i, true));
+        hints_col = Array.from({length: size}, (x, i) => i).map(i => get_hints(i, false));
 
-        tips_row = tips_row.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
-        tips_col = tips_col.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
+        hints_row = hints_row.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
+        hints_col = hints_col.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
 
         res.json({ 
             size: size,
             image: rgbas,
-            colors: set,
-            puzzle: puzzle,
-            rows: tips_row,
-            cols: tips_col,
-            max_tips_row: Math.max(...tips_row.map((i) => {return i.length})),
-            max_tips_col: Math.max(...tips_col.map((i) => {return i.length}))
+            colors: colors,
+            rows: hints_row,
+            cols: hints_col,
+            max_hints_row: Math.max(...hints_row.map((i) => {return i.length})),
+            max_hints_col: Math.max(...hints_col.map((i) => {return i.length}))
         });
     });
 }); 
