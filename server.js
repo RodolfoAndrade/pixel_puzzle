@@ -21,12 +21,13 @@ app.get('/api/image', (req, res) => {
     console.log(list);
     Jimp.read("./src/assets/images/"+list[Math.floor(Math.random() * list.length)], (err, image) => {
         if (err) throw err;
-        var is = Array.from({length: 16*16}, (x, i) => i); // array of 16*16
-        var indexes = is.map(i => [Math.floor(i/16), i%16]); // indexes [0,0], [0,1], ...
+        var size = 8;
+        var is = Array.from({length: size*size}, (x, i) => i); // array of size*size
+        var indexes = is.map(i => [Math.floor(i/size), i%size]); // indexes [0,0], [0,1], ...
         var pixels = indexes.map(i => image.getPixelColor(i[1], i[0])); // list of pixels
         var rgbas = pixels.map(i => Jimp.intToRGBA(i)); // int to rgba
         var set = Array.from(new Set(pixels)).map(i => Jimp.intToRGBA(i)); // get unique colors
-        var puzzle = Array(16*16).fill({ r:255, g:255, b:255, a:255 }); // get blank puzzle
+        var puzzle = Array(size*size).fill({ r:255, g:255, b:255, a:255 }); // get blank puzzle
 
         function get_tips(i = 0, rows = true){
             // get color tips for each row
@@ -35,14 +36,14 @@ app.get('/api/image', (req, res) => {
             var order = 0;
             if(rows){
                 // take first pixel color
-                var color = pixels[i*16+j];
+                var color = pixels[i*size+j];
                 // save on tips dict
                 tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
-                for(j = 1; j < 16; j++){
+                for(j = 1; j < size; j++){
                     // if next color is not the same, add new tip and change color
-                    if(color != pixels[i*16+j]){
+                    if(color != pixels[i*size+j]){
                         order++;
-                        color = pixels[i*16+j];
+                        color = pixels[i*size+j];
                         tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                     }
                     // if next color is the same
@@ -53,14 +54,14 @@ app.get('/api/image', (req, res) => {
             }
             else {
                 // take first pixel color
-                var color = pixels[j*16+i];
+                var color = pixels[j*size+i];
                 // save on tips dict
                 tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
-                for(j = 1; j < 16; j++){
+                for(j = 1; j < size; j++){
                     // if next color is not the same, add new tip and change color
-                    if(color != pixels[j*16+i]){
+                    if(color != pixels[j*size+i]){
                         order++;
-                        color = pixels[j*16+i];
+                        color = pixels[j*size+i];
                         tips[order] = {"color": Jimp.intToRGBA(color), "qtd": color==4294967295 ? 0 : 1};
                     }
                     // if next color is the same
@@ -73,13 +74,14 @@ app.get('/api/image', (req, res) => {
             return tips;
         }
 
-        tips_row = Array.from({length: 16}, (x, i) => i).map(i => get_tips(i, true));
-        tips_col = Array.from({length: 16}, (x, i) => i).map(i => get_tips(i, false));
+        tips_row = Array.from({length: size}, (x, i) => i).map(i => get_tips(i, true));
+        tips_col = Array.from({length: size}, (x, i) => i).map(i => get_tips(i, false));
 
         tips_row = tips_row.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
         tips_col = tips_col.map((i) => {return i.filter((j) => {return j["qtd"]>0})});
 
         res.json({ 
+            size: size,
             image: rgbas,
             colors: set,
             puzzle: puzzle,

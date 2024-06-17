@@ -1,15 +1,16 @@
 <div class="main">
   <h1>Pixel Puzzle</h1>
   <h2>by RodolfoAndrade</h2>
+  <p>Get ready to flex your logic muscles and unleash your inner artist with Pixel Puzzle! This exciting game combines the satisfaction of solving puzzles with the joy of creating pixel art.</p>
   <button (click)="getImage()">New Game</button><br>
-  <div *ngIf="image">
+  <div *ngIf="data">
     <div class="wrapper flex-row">
       <h3>select color: </h3>
       <table class="table"><tr><td *ngFor="let x of colors" [ngStyle]="{'background-color': getColor(x)}" (click)="selectColor(x)"> </td></tr></table>
       <h3>selected color: </h3>
       <table class="table"><tr><td [ngStyle]="{'background-color': getColor(color)}"> </td></tr></table>
     </div>
-    <table>
+    <table id="main_table">
       <tr>
         <td></td>
         <td>
@@ -38,13 +39,28 @@
             <tr *ngFor="let i of rows">
               <td *ngFor="let j of cols"
               (click)="setColor(i, j)"
-              [ngStyle]="{'background-color': getColor(puzzle[i*16+j])}"></td>
+              [ngStyle]="{'background-color': getColor(puzzle[i*size+j])}"></td>
             </tr>
           </table>
         </td>
       </tr>
     </table>
   </div>
-  <app-footer></app-footer>
+  <section>
+    <h2>Gameplay:</h2>
+    <p>Click NEW GAME: A puzzle is randomly selected from the available options, ranging from easy to challenging.</p>
+    <p>Select color: The color represents the RGB color tha must be clicked to fill in empty spots in the right place. The number clues placed along the edges of the grid shows how many there are.</p>
+    <p>Logic Time! Here's where the challenge begins. The numbers indicate how many squares of a specific color fill a row or column.</p>
+    <p>For example, a "3" next to a row might mean there are three consecutive colored squares somewhere in that row, with empty squares separating them or a pixel of different color.</p>
+    <p>Coloring In: Based on the number clues, strategically fill the grid with the corresponding colors. Remember, logic is key!</p>
+    <p>Not all squares will be colored. Some will remain blank to create the final image.</p>
+    <p>Unveil the Masterpiece! As you fill the squares logically, a pixel art image will gradually emerge. Keep solving until the entire grid is complete and the hidden artwork is revealed!</p>
+  </section>
+  <section>
+    <!-- games -->
+    <h2>References:</h2>
+    <a href="https://www.flaticon.com/free-icons/pixelated" title="pixelated icons">Pixelated icon created by Miguel C Balandrano - Flaticon</a><br>
+    <!-- <a href="https://kenney.nl/assets/monochrome-rpg" title="pixelated images">Pixelated images downloaded from https://kenney.nl/</a><br> -->
+  </section>
 </div>
 <router-outlet />
