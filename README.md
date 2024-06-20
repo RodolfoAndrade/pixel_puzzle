@@ -14,10 +14,10 @@ This repository holds the code for a web-based game called Pixel Art Logic Puzzl
 * [Angular v17:](https://v17.angular.io/cli) `npm install -g @angular/cli@17`
 
 ### Instructions:
-1. Clone this repository.
-1. Navigate to the project directory in your terminal.
+1. Clone this repository: `git clone https://github.com/RodolfoAndrade/pixel_puzzle.git`
+1. Navigate to the project directory in your terminal: `cd pixel_puzzle`
 1. Install dependencies
 1. Install the game: `npm install`
 1. Start the Angular development server: `ng serve`
-1. Start the Node.js server (backend): `node .\server.js`
 1. Navigate to `http://localhost:4200/`
+1. Have fun!
