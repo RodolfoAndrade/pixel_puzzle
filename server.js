@@ -2,6 +2,7 @@ const express = require('express');
 const Jimp = require("jimp");
 const fs = require('fs'); 
 const app = express(); 
+var https = require('https');
 
 // handling CORS 
 app.use((req, res, next) => { 
@@ -75,6 +76,13 @@ app.get('/api/image', (req, res) => {
     });
 }); 
 
-app.listen(3000, () => { 
+// Creating object of key and certificate 
+// for SSL 
+const options = { 
+    key: fs.readFileSync("server.key"), 
+    cert: fs.readFileSync("server.cert"), 
+  }; 
+
+https.createServer(options, app).listen(3000, () => { 
     console.log('Server listening on port 3000'); 
 });
