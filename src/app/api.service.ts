@@ -9,7 +9,7 @@ export class ApiService {
 	constructor(private http: HttpClient) { } 
   getImage() {
     return this.http.get(
-      'https://ec2-18-230-138-245.sa-east-1.compute.amazonaws.com:3000/api/image'
+      'https://54.232.180.189:3000/api/image'
     ).pipe(timeout(1000));
   }
 }
